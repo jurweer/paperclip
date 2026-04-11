@@ -989,14 +989,14 @@ export function IssueDocumentsSection({
                   )}
                   <div
                     className={`${documentBodyShellClassName} ${documentBodyPaddingClassName} ${
-                      activeDraft || isHistoricalPreview ? "" : "hover:bg-accent/10"
+                      activeDraft || isHistoricalPreview ? "" : "hover:bg-accent/10 cursor-text"
                     }`}
                   >
                     {isHistoricalPreview ? (
                       <div className="rounded-md border border-amber-500/20 bg-background/50 p-3">
                         {renderBody(displayedBody, documentBodyContentClassName)}
                       </div>
-                    ) : (
+                    ) : activeDraft ? (
                       <MarkdownEditor
                         value={displayedBody}
                         onChange={(body) => {
@@ -1022,6 +1022,15 @@ export function IssueDocumentsSection({
                         imageUploadHandler={imageUploadHandler}
                         onSubmit={() => void commitDraft(activeDraft ?? draft, { clearAfterSave: false, trackAutosave: true })}
                       />
+                    ) : (
+                      <div
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => beginEdit(doc.key)}
+                        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") beginEdit(doc.key); }}
+                      >
+                        {renderBody(displayedBody, documentBodyContentClassName)}
+                      </div>
                     )}
                   </div>
                   <div className="flex min-h-4 items-center justify-end px-1">
